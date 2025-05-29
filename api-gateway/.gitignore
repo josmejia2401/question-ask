@@ -1,0 +1,51 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.terraform
+
+# terraform
+resources/
+
+# Logs
+logs
+*.log
+*.log.*
+
+# Runtime
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Env
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Build
+dist/
+build/
+tmp/
+temp/
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+*.local
+*.sublime-workspace
+*.swp

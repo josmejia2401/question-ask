@@ -1,0 +1,16 @@
+.input-group-custom {
+    border-right: unset;
+    border-top-right-radius: unset;
+    border-bottom-right-radius: unset;
+}
+
+.icon-group-custom {
+    border-left: unset !important;
+    height: 40px;
+    border-top-left-radius: unset;
+    border-bottom-left-radius: unset;
+    align-self: center;
+    align-items: center;
+    align-content: center;
+    background-color: transparent;
+}

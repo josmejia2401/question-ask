@@ -1,0 +1,29 @@
+{
+    "name": "user-create",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "commonjs",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "install:prod": "npm install --production"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/josmejia2401/questionask-js.git"
+    },
+    "author": "jose.mejia",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/josmejia2401/questionask-js/issues"
+    },
+    "homepage": "https://github.com/josmejia2401/questionask-js#readme",
+    "dependencies": {
+        "joi": "17.13.3",
+        "jsonwebtoken": "9.0.2",
+        "sharedjs": "file:../../commonjs/sharedjs",
+        "dynamodbjs": "file:../../commonjs/dynamodbjs",
+        "dotenv": "16.5.0"
+    },
+    "devDependencies": {}
+}
