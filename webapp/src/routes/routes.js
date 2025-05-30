@@ -13,13 +13,13 @@ const LoginPage = lazy(() => import('../features/auth/login'));
 const RegisterPage = lazy(() => import('../features/auth/register'));
 const DashboardPage = lazy(() => import('../features/dashboard'));
 const UsersPage = lazy(() => import('../features/users'));
-const ContentsPage = lazy(() => import('../features/contents'));
-const ProfilePage = lazy(() => import('../features/profile'));
+const EditProfilePage = lazy(() => import('../features/profile/edit'));
+const CreateFormPage = lazy(() => import('../features/forms/create'));
 
 const routes = [
   {
     path: '/',
-    element: <Navigate to="/dashboard" />,
+    element: <Navigate to="/index" />,
   },
   {
     path: '/index',
@@ -52,18 +52,18 @@ const routes = [
     ),
   },
   {
-    path: '/contents',
+    path: '/forms/create',
     element: (
       <PrivateRoute>
-        <MainLayout><ContentsPage /></MainLayout>
+        <MainLayout><CreateFormPage /></MainLayout>
       </PrivateRoute>
     ),
   },
   {
-    path: '/profile',
+    path: '/profile/edit',
     element: (
       <PrivateRoute>
-        <MainLayout><ProfilePage /></MainLayout>
+        <MainLayout><EditProfilePage /></MainLayout>
       </PrivateRoute>
     ),
   },

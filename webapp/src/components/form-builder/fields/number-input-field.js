@@ -32,10 +32,10 @@ function NumberInputField({
                 max={max}
                 step={step}
                 autoComplete={autoComplete}
-                className={`${className} w-full p-2 border rounded-lg shadow-sm focus:outline-none focus:ring ${error
-                        ? 'border-red-500 focus:ring-red-200'
-                        : 'border-gray-300 focus:ring-blue-200'
-                    }`}
+                className={`${className} w-full p-2 border rounded-lg shadow-sm focus:outline-none ${error
+                    ? 'bg-red-50 border-red-600 focus:ring-2 focus:ring-red-200'
+                    : 'bg-gray-100 border-gray-300 focus:ring-2 focus:ring-indigo-600'
+                }`}
             />
             {error && <p className="text-sm text-red-600 mt-1">{error}</p>}
         </div>

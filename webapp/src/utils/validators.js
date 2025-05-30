@@ -29,12 +29,19 @@ export const validateUserForm = ({ name, email, password }) => {
 
 
 export const validateFieldFromProps = (value, input) => {
-  //const name = input.name || 'Este campo';
   const trimmedValue = typeof value === 'string' ? value.trim() : value;
 
   // Requerido
   if (input.required && (!trimmedValue && trimmedValue !== 0)) {
     return 'Este campo es obligatorio';
+  }
+
+  // Validación de correo electrónico
+  if (input.type === 'email' && trimmedValue) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedValue)) {
+      return 'Debe ser un correo electrónico válido';
+    }
   }
 
   // Número
@@ -53,7 +60,7 @@ export const validateFieldFromProps = (value, input) => {
     }
   }
 
-  // Longitud (solo para strings)
+  // Longitud y patrón (solo strings)
   if (typeof value === 'string') {
     if (input.minLength !== undefined && input.minLength >= 0 && value.length < input.minLength) {
       return `Debe tener al menos ${input.minLength} caracteres`;
@@ -63,11 +70,11 @@ export const validateFieldFromProps = (value, input) => {
       return `Debe tener como máximo ${input.maxLength} caracteres`;
     }
 
-    if (input.size !== undefined && input.size >= 0 && value.length > input.size) {
-      return `Debe tener como máximo ${input.size} caracteres`;
-    }
+    //if (input.size !== undefined && input.size >= 0 && value.length > input.size) {
+    //  return `Debe tener como máximo ${input.size} caracteres`;
+    //}
 
-    // Patrón
+    // Patrón personalizado
     if (input.pattern) {
       const regex = new RegExp(input.pattern);
       if (!regex.test(value)) {
@@ -76,5 +83,5 @@ export const validateFieldFromProps = (value, input) => {
     }
   }
 
-  return '';
+  return ""; // No hay errores
 };

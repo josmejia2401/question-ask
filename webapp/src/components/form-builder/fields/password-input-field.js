@@ -18,9 +18,9 @@ function PasswordInputField({
     const hasError = error && error.length > 0;
 
     return (
-        <div className="mb-4 relative">
+        <div className="mb-2 relative">
             {label && (
-                <label htmlFor={name} className="block font-medium mb-1 text-white">
+                <label htmlFor={name} className="block font-medium mb-1 text-gray-600">
                     {label} {required && <span className="text-red-500 ml-1">*</span>}
                 </label>
             )}
@@ -33,8 +33,9 @@ function PasswordInputField({
                 required={required}
                 placeholder={placeholder}
                 autoComplete={autoComplete}
-                className={`${className} w-full p-2 border ${hasError ? 'border-red-500' : 'border-gray-300'
-                    } rounded shadow-sm pr-10 focus:outline-none focus:ring ${hasError ? 'focus:ring-red-200' : 'focus:ring-blue-200'
+                className={`${className} w-full p-2 border rounded-lg shadow-sm focus:outline-none ${hasError
+                    ? 'bg-red-50 border-red-600 focus:ring-2 focus:ring-red-200'
+                    : 'bg-gray-100 border-gray-300 focus:ring-2 focus:ring-indigo-600'
                     }`}
                 {...rest}
             />

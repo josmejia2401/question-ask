@@ -1,11 +1,13 @@
 import * as React from 'react';
 import "./styles.css";
-import Input from '../../../components/input';
-import InputGroup from '../../../components/input-group';
-import PrimaryButton from '../../../components/button-primary';
 import { Link } from 'react-router-dom';
 import { register } from './api';
 import { buildPayloadFromForm, resetFormValues, stopPropagation } from '../../../utils/utils';
+import TextInputField from '../../../components/form-builder/fields/text-input-field';
+import PasswordInputField from '../../../components/form-builder/fields/password-input-field';
+import EmailInputField from '../../../components/form-builder/fields/email-input-field';
+import Button from '../../../components/button';
+import { validateFieldFromProps } from '../../../utils/validators';
 
 class Page extends React.Component {
 
@@ -19,27 +21,27 @@ class Page extends React.Component {
             data: {
                 firstName: {
                     value: '',
-                    errors: []
+                    error: ''
                 },
                 lastName: {
                     value: '',
-                    errors: []
+                    error: ''
                 },
                 email: {
                     value: '',
-                    errors: []
+                    error: ''
                 },
                 phoneNumber: {
                     value: '',
-                    errors: []
+                    error: ''
                 },
                 username: {
                     value: '',
-                    errors: []
+                    error: ''
                 },
                 password: {
                     value: '',
-                    errors: []
+                    error: ''
                 }
             }
         };
@@ -56,26 +58,42 @@ class Page extends React.Component {
 
     async propagateState() { }
 
-    async updateState(payload) {
-        this.setState({ ...payload }, () => this.propagateState());
+    updateState(payload) {
+        this.setState(prevState => ({
+            ...prevState,
+            ...payload
+        }), this.propagateState);
     }
 
-    async handleInputChange(event, errors) {
+
+    handleInputChange = (event) => {
         stopPropagation(event);
         const { name, value } = event.target;
-        const { data } = this.state;
-        data[name].value = value;
-        data[name].errors = errors;
-        const isValidForm = Object.keys(data).filter(key => data[key].errors.length > 0).length === 0;
-        this.updateState({ data, isValidForm });
-    }
+        const input = event.target;
+
+        const error = validateFieldFromProps(value, input);
+
+        const updatedField = {
+            value,
+            error: error,
+        };
+        const updatedData = {
+            ...this.state.data,
+            [name]: updatedField,
+        };
+
+        const isValidForm = Object.values(updatedData).every((f) => f.error.length === 0);
+
+        this.updateState({ data: updatedData, isValidForm });
+    };
+
 
     handleSubmit(event) {
         stopPropagation(event);
         const { data } = this.state;
         const form = event.target;
         const isValid = form.checkValidity();
-        const isValidForm = Object.keys(data).filter(key => data[key].errors.length > 0).length === 0;
+        const isValidForm = Object.keys(data).filter(key => data[key].error.length > 0).length === 0;
         if (isValid && isValidForm) {
             this.updateState({
                 isValidForm: isValidForm,
@@ -86,10 +104,6 @@ class Page extends React.Component {
             const payload = buildPayloadFromForm(data);
             payload.createdAt = new Date().toISOString();
             payload.statusId = "PENDING";
-            payload.healthData = {
-                age: 0,
-                height: 0,
-            };
             register(payload).then(response => {
                 this.updateState({
                     successMessage: response.message,
@@ -110,149 +124,131 @@ class Page extends React.Component {
     }
 
     render() {
-        return (<div className="card border-0 rounded-4">
-            <div className="card-body p-3 p-md-4 p-xl-5">
-                <div className="row">
-                    <div className="col-12">
-                        <div className="mb-4">
-                            <h3>Registrar usuario</h3>
-                            <p>¿Ya tienes una cuenta? <Link to={'/auth/login'}>Inicia sesión</Link></p>
-                        </div>
-                    </div>
-                </div>
-                {this.state.errorMessage && <div className="alert alert-danger" role="alert"><p className='p-error'>{this.state.errorMessage}</p></div>}
-                {this.state.successMessage && <div className="alert alert-success" role="alert"><p className='p-success'>{this.state.successMessage}</p></div>}
-                <form className="needs-validation form" onSubmit={this.handleSubmit} autoComplete="off" noValidate>
+        const { data, loading, errorMessage, successMessage, isValidForm } = this.state;
 
-                    <div className="row mb-2">
-                        <div className="col-12 col-md-6 mb-2">
-                            <Input
-                                value={this.state.data.firstName.value}
-                                schema={{
-                                    name: 'Nombres',
-                                    placeholder: '',
-                                    id: 'firstName',
-                                    type: 'text',
-                                    required: true,
-                                    minLength: 1,
-                                    maxLength: 100,
-                                    autoComplete: 'given-name'
-                                }}
-                                onChange={this.handleInputChange}
-                                disabled={this.state.loading}
-                            />
-                        </div>
-                        <div className="col-12 col-md-6 mb-2">
-                            <Input
-                                value={this.state.data.lastName.value}
-                                schema={{
-                                    name: 'Apellidos',
-                                    placeholder: '',
-                                    id: 'lastName',
-                                    type: 'text',
-                                    required: false,
-                                    minLength: 1,
-                                    maxLength: 100,
-                                    autoComplete: 'family-name'
-                                }}
-                                onChange={this.handleInputChange}
-                                disabled={this.state.loading}
-                            />
-                        </div>
+        return (
+            <div className="w-full max-w-md mt-10 p-8 rounded-2xl shadow-lg bg-white">
+                <h2 className="text-left text-3xl font-bold mb-3 text-slate-800">Registro</h2>
+
+                <p className="text-left text-sm mb-6 text-slate-600">
+                    ¿Ya tienes cuenta?{' '}
+                    <Link to="/auth/login" className="text-indigo-600 hover:underline font-medium">
+                        Inicia sesión.
+                    </Link>
+                </p>
+
+                {errorMessage && (
+                    <p className="text-red-500 text-sm text-center mb-4">{errorMessage}</p>
+                )}
+
+                {successMessage && (
+                    <p className="text-green-500 text-sm text-center mb-4">{successMessage}</p>
+                )}
+
+                <form
+                    onSubmit={this.handleSubmit}
+                    noValidate
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2"
+                >
+                    {/* Nombres */}
+                    <div className="sm:col-span-2">
+                        <TextInputField
+                            label="Nombres"
+                            id="firstName"
+                            name="firstName"
+                            value={data.firstName.value}
+                            onChange={this.handleInputChange}
+                            error={data.firstName.error}
+                            autoComplete="given-name"
+                            disabled={loading}
+                            required
+                        />
                     </div>
 
-
-                    <div className="row mb-2">
-                        <div className="col-12 col-md-6 mb-2">
-                            <Input
-                                value={this.state.data.email.value}
-                                schema={{
-                                    name: 'Correo electrónico',
-                                    placeholder: '',
-                                    id: 'email',
-                                    type: 'email',
-                                    required: true,
-                                    minLength: 1,
-                                    maxLength: 100,
-                                    autoComplete: 'email'
-                                }}
-                                onChange={this.handleInputChange}
-                                disabled={this.state.loading}
-                            />
-                        </div>
-                        <div className="col-12 col-md-6 mb-2">
-                            <Input
-                                value={this.state.data.phoneNumber.value}
-                                schema={{
-                                    name: 'Número celular',
-                                    placeholder: '',
-                                    id: 'phoneNumber',
-                                    type: 'text',
-                                    required: true,
-                                    minLength: 1,
-                                    maxLength: 10,
-                                    autoComplete: 'phone',
-                                    pattern: "[3]{1}[0-9]{9}"
-                                }}
-                                onChange={this.handleInputChange}
-                                disabled={this.state.loading}
-                            />
-                        </div>
+                    {/* Apellidos */}
+                    <div className="sm:col-span-2">
+                        <TextInputField
+                            label="Apellidos"
+                            id="lastName"
+                            name="lastName"
+                            value={data.lastName.value}
+                            onChange={this.handleInputChange}
+                            error={data.lastName.error}
+                            autoComplete="family-name"
+                            disabled={loading}
+                            required
+                        />
                     </div>
 
-                    <div className="row mb-2">
-                        <div className="col-12 col-md-12 mb-2">
-                            <Input
-                                value={this.state.data.username.value}
-                                schema={{
-                                    name: 'Usuario',
-                                    placeholder: '',
-                                    id: 'username',
-                                    type: 'text',
-                                    required: true,
-                                    minLength: 6,
-                                    maxLength: 50,
-                                    autoComplete: 'username'
-                                }}
-                                onChange={this.handleInputChange}
-                                disabled={this.state.loading}
-                            />
-                        </div>
-                        <div className="col-12 col-md-12">
-                            <InputGroup
-                                value={this.state.data.password.value}
-                                schema={{
-                                    name: 'Contraseña',
-                                    placeholder: '',
-                                    id: 'password',
-                                    type: 'password',
-                                    required: true,
-                                    minLength: 6,
-                                    maxLength: 50,
-                                    autoComplete: 'new-password'
-                                }}
-                                onChange={this.handleInputChange}
-                                disabled={this.state.loading}
-                            />
-                        </div>
-                    </div>
+                    {/* Correo */}
+                    <EmailInputField
+                        label="Correo"
+                        id="email"
+                        name="email"
+                        value={data.email.value}
+                        onChange={this.handleInputChange}
+                        error={data.email.error}
+                        autoComplete="email"
+                        disabled={loading}
+                        required
+                    />
 
-                    <div className='row mt-4'>
-                        <div className="col-12">
-                            <div className="d-grid">
-                                <PrimaryButton
-                                    text={'Registrarme ahora'}
-                                    type={'submit'}
-                                    disabled={this.state.isValidForm === false || this.state.loading}
-                                    showText={true}
-                                    loading={this.state.loading}
-                                    textLoading={'Iniciando...'}></PrimaryButton>
-                            </div>
-                        </div>
+                    {/* Celular */}
+                    <TextInputField
+                        label="Celular"
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        value={data.phoneNumber.value}
+                        onChange={this.handleInputChange}
+                        error={data.phoneNumber.error}
+                        autoComplete="tel"
+                        disabled={loading}
+                        required
+                    />
+
+                    {/* Usuario */}
+                    <TextInputField
+                        label="Usuario"
+                        id="username"
+                        name="username"
+                        value={data.username.value}
+                        onChange={this.handleInputChange}
+                        error={data.username.error}
+                        autoComplete="username"
+                        disabled={loading}
+                        required
+                    />
+
+                    {/* Contraseña */}
+                    <PasswordInputField
+                        label="Contraseña"
+                        id="password"
+                        name="password"
+                        value={data.password.value}
+                        error={data.password.error}
+                        onChange={this.handleInputChange}
+                        autoComplete="new-password"
+                        disabled={loading}
+                        required
+                    />
+
+                    {/* Botón ocupa ambas columnas */}
+                    <div className="sm:col-span-2 mt-3">
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            loading={loading}
+                            disabled={!isValidForm}
+                            fullWidth
+                        >
+                            Crear
+                        </Button>
                     </div>
                 </form>
+
+
             </div>
-        </div>);
+        );
     }
 }
-export default Page;
+export default Page; 

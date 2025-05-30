@@ -107,15 +107,16 @@ class Page extends React.Component {
         const { data, loading, errorMessage, successMessage, isValidForm } = this.state;
 
         return (
-            <div className="w-full max-w-none mt-10 p-6 rounded shadow">
-                <h2 className="text-left text-4xl font-semibold mb-2 text-white">Iniciar sesión</h2>
+            <div className="w-full max-w-md mt-10 p-8 rounded-2xl shadow-lg bg-white">
+                <h2 className="text-left text-3xl font-bold mb-3 text-slate-800">Iniciar sesión</h2>
 
-                <p className="text-left text-sm mt-4 mb-6 text-gray-600">
+                <p className="text-left text-sm mb-6 text-slate-600">
                     ¿No tienes cuenta?{' '}
-                    <Link to="/registro" className="text-blue-600 hover:underline">
+                    <Link to="/auth/register" className="text-indigo-600 hover:underline font-medium">
                         Regístrate rápido y sin complicaciones.
                     </Link>
                 </p>
+
                 {errorMessage && (
                     <p className="text-red-500 text-sm text-center mb-4">{errorMessage}</p>
                 )}
@@ -136,7 +137,8 @@ class Page extends React.Component {
                         autoComplete="username"
                         disabled={loading}
                         required
-                        className="bg-gray-700 text-white"></TextInputField>
+                        className=""
+                    />
 
                     <PasswordInputField
                         label="Contraseña"
@@ -146,12 +148,19 @@ class Page extends React.Component {
                         error={data.password.error}
                         onChange={this.handleInputChange}
                         placeholder=""
-                        autoComplete="password"
+                        autoComplete="current-password"
                         disabled={loading}
                         required
-                        className="bg-gray-700 text-white"></PasswordInputField>
+                        className=""
+                    />
 
-                    <Button variant="primary" type="submit" loading={loading} disabled={!isValidForm} fullWidth>
+                    <Button
+                        variant="primary"
+                        type="submit"
+                        loading={loading}
+                        disabled={!isValidForm}
+                        fullWidth
+                    >
                         Entrar
                     </Button>
                 </form>

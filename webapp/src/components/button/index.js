@@ -19,7 +19,7 @@ function Button({
         'inline-flex items-center justify-center font-medium rounded focus:outline-none transition';
 
     const variantStyles = {
-        primary: 'bg-indigo-800 text-white hover:bg-blue-700',
+        primary: 'bg-indigo-700 text-white hover:bg-indigo-800',
         secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
         tertiary: 'bg-transparent text-blue-600 hover:underline',
     };

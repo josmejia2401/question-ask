@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Features from './features';
 import Collections from './collections';
 import Plans from './plans';
-
+import './style.css';
 
 const navigation = [
     { name: 'Inicio', href: '#home' },
@@ -128,7 +128,7 @@ export default function Index() {
                         </div>
                     </div>
                     <div className="text-center">
-                        <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl">
+                        <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl main-text-animation">
                             Crea formularios que se adaptan a ti
                         </h1>
                         <p className="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8">
