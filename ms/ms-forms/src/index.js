@@ -1,0 +1,14 @@
+require('dotenv').config({ path: '../.env' });
+const express = require('express');
+const session = require('express-session');
+const authRoutes = require('./routes/auth');
+const formsRoutes = require('./routes/forms');
+const usersRoutes = require('./routes/users');
+const app = express();
+app.use(express.json());
+app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+app.use('/api/auth', authRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/forms', formsRoutes);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

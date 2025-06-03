@@ -142,7 +142,9 @@ class Layout extends React.Component {
                               </MenuButton>
                             </div>
 
-                            <MenuItems className="absolute left-0 z-50 mt-2 w-48 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <MenuItems
+                              transition
+                              className="absolute left-0 z-50 mt-2 w-48 origin-top-left rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                               <div className="py-1">
                                 {item.children.map((child) => (
                                   <MenuItem key={child.name}>

@@ -1,0 +1,74 @@
+const userService = require('../services/user.service');
+const Logger = require('../utils/logger');
+const { internalServerError, success, badRequest, forbidden, created } = require('../utils/response');
+const userValidator = require('../validations/users-validation');
+
+function handleError(res, err) {
+  Logger.error(err);
+  if (err.name === 'CustomError') {
+    return res.status(err.code).json(err.toJSON());
+  } else {
+    return res.status(500).json(internalServerError());
+  }
+}
+
+exports.createUser = async (req, res) => {
+  try {
+    const { error, value } = userValidator.validateCreateUser(req.body);
+    if (error) {
+      Logger.error(badRequest(error.details[0].message));
+      return res.status(400).json(badRequest(error.details[0].message));
+    }
+    const user = await userService.createUser(value);
+    res.status(201).json(created(user));
+  } catch (err) {
+    handleError(res, err);
+  }
+};
+
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.user.keyid;
+    if (req.params.id !== userId) {
+      Logger.error(badRequest(forbidden()));
+      return res.status(403).json(forbidden());
+    }
+    const user = await userService.getUserById(req.params.id);
+    res.status(200).json(success(user));
+  } catch (err) {
+    handleError(res, err);
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const { error, value } = userValidator.validateCreateUser(req.body);
+    if (error) {
+      Logger.error(badRequest(error.details[0].message));
+      return res.status(400).json(badRequest(error.details[0].message));
+    }
+    const userId = req.user.keyid;
+    if (req.params.id !== userId) {
+      Logger.error(badRequest(forbidden()));
+      return res.status(403).json(forbidden());
+    }
+    const updatedUser = await userService.updateUser(req.params.id, value);
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    handleError(res, err);
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.user.keyid;
+    if (req.params.id !== userId) {
+      Logger.error(badRequest(forbidden()));
+      return res.status(403).json(forbidden());
+    }
+    await userService.deleteUser(req.params.id);
+    res.status(204).send();
+  } catch (err) {
+    handleError(res, err);
+  }
+};

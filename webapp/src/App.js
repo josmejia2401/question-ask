@@ -1,6 +1,6 @@
 // src/App.jsx
 import { BrowserRouter, useRoutes } from 'react-router-dom';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import './App.css';
 import routes from './routes/routes';
 
@@ -43,6 +43,44 @@ function AppRoutes() {
 }
 
 export default function App() {
+  /*
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const key = e.key.toLowerCase();
+
+      // F5
+      if (key === 'f5') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      // Ctrl+R / Cmd+R
+      if ((e.ctrlKey || e.metaKey) && key === 'r') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      // Ctrl+Shift+R / Cmd+Shift+R
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && key === 'r') {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    const handleBeforeUnload = (e) => {
+      // Mensaje no siempre es mostrado, depende del navegador
+      e.preventDefault();
+      e.returnValue = '';
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);*/
   return (
     <BrowserRouter>
       <AppRoutes />

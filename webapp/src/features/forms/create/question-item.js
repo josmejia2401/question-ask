@@ -6,14 +6,14 @@ const typeLabels = {
   long: 'Respuesta larga',
   multiple: 'Varias opciones',
   checkbox: 'Casillas',
-  fileupload: 'Cargar archivos',
-  filedownload: 'Descargar archivos',
+  //fileupload: 'Cargar archivos',
+  //filedownload: 'Descargar archivos',
   rating: 'Calificación',
   date: 'Fecha',
   time: "Hora"
 };
 
-const QuestionItem = ({ question, index, onUpdate, onRemove }) => {
+const SortableItem = ({ question, index, onUpdate, onRemove }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     onUpdate(index, { ...question, [name]: value });
@@ -25,12 +25,8 @@ const QuestionItem = ({ question, index, onUpdate, onRemove }) => {
     <div className="border rounded p-4 bg-white shadow-sm space-y-4">
       <div className="flex justify-between">
         <h3 className="font-semibold">Pregunta #{index + 1}</h3>
-        <button
-          onClick={handleRemove}
-          className="text-red-600 hover:text-red-800"
-        >
-          Eliminar
-        </button>
+        <TrashIcon onClick={handleRemove}
+          className="text-red-600 hover:text-red-800 h-5 w-5" />
       </div>
 
       <div>
@@ -66,6 +62,7 @@ const QuestionItem = ({ question, index, onUpdate, onRemove }) => {
           <input
             type="text"
             value={question.answer || ''}
+            disabled
             onChange={(e) =>
               onUpdate(index, { ...question, answer: e.target.value })
             }
@@ -539,4 +536,4 @@ const QuestionItem = ({ question, index, onUpdate, onRemove }) => {
   )
 }
 
-export default QuestionItem
+export default SortableItem;

@@ -1,29 +1,33 @@
 import React, { useState } from 'react'
 import QuestionBuilder from './question-builder'
+import { CommonStore } from '../../../store/common-store'
 
 const FormCreatePage = () => {
-    const [questions, setQuestions] = useState([])
+    const [questions, setQuestions] = useState(CommonStore.getState().questions);
 
     const addQuestion = () => {
-        setQuestions(prev => [
-            ...prev,
-            {
-                questionText: '',
-                type: 'short',
-                options: [],
-                required: false,
-            },
-        ])
+        const newQuestions = [...questions, {
+            questionText: '',
+            type: 'short',
+            options: [],
+            required: false,
+            answer: ''
+        }];
+        setQuestions(newQuestions);
+        CommonStore.setQuestions(newQuestions);
     }
 
     const updateQuestion = (index, updatedQuestion) => {
-        const newQuestions = [...questions]
-        newQuestions[index] = updatedQuestion
-        setQuestions(newQuestions)
+        const newQuestions = [...questions];
+        newQuestions[index] = updatedQuestion;
+        setQuestions(newQuestions);
+        CommonStore.setQuestions(newQuestions);
     }
 
     const removeQuestion = (index) => {
-        setQuestions(questions.filter((_, i) => i !== index))
+        const newQuestions = questions.filter((_, i) => i !== index);
+        setQuestions(newQuestions);
+        CommonStore.setQuestions(newQuestions);
     }
 
     return (
@@ -40,4 +44,4 @@ const FormCreatePage = () => {
     )
 }
 
-export default FormCreatePage
+export default FormCreatePage;

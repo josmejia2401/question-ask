@@ -7,7 +7,7 @@ export class AuthStore {
         status: "unset",
         token: null,
         isAuthenticated: false,
-        tokenInfo: ''
+        tokenInfo: '',
     };
 
     static getState() {
@@ -32,6 +32,7 @@ export class AuthStore {
         AuthStore.data.token = null;
         AuthStore.data.tokenInfo = null;
         localStorage.removeItem("state");
+        localStorage.clear();
     }
 }
 

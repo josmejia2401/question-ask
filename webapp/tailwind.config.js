@@ -3,6 +3,17 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  safelist: [
+    'transition',
+    'duration-100',
+    'duration-75',
+    'ease-out',
+    'ease-in',
+    'opacity-0',
+    'opacity-100',
+    'scale-95',
+    'scale-100',
+  ],
   theme: {
     extend: {
       colors: {
