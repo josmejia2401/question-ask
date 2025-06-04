@@ -15,22 +15,6 @@ class CustomError extends Error {
             code: this.code,
         };
     }
-
-    formatError() {
-        if (this.error instanceof Error) {
-            return {
-                message: this.message,
-                stack: this.error.stack,
-            };
-        } else if (typeof err === 'object') {
-            try {
-                return JSON.stringify(this.error, null, 2);
-            } catch {
-                return String(this.error);
-            }
-        }
-        return this.error;
-    }
 }
 
 module.exports.CustomError = CustomError;

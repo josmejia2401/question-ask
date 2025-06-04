@@ -19,10 +19,10 @@ CREATE TABLE users (
 -- Crear tabla de tokens de sesión
 CREATE TABLE tokens (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    token TEXT NOT NULL,
+    token TEXT,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    expires_at TIMESTAMPTZ NOT NULL
+    expires_at TIMESTAMPTZ
 );
 
 -- Crear tabla de preguntas
@@ -33,6 +33,15 @@ CREATE TABLE forms (
     type TEXT NOT NULL CHECK (type IN ('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'Hora')),
     options JSONB, -- array JSON dinámico si aplica (ej: ["opción 1", "opción 2"])
     required BOOLEAN DEFAULT FALSE,
+    is_public BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE password_resets (
+  id UUID PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token VARCHAR(255) NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

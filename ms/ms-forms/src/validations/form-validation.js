@@ -13,7 +13,7 @@ const createFormSchema = Joi.object({
     .messages({
       'string.base': 'La respuesta debe ser un texto.',
     }),
-  type: Joi.string().valid('text', 'textarea', 'select', 'checkbox', 'radio').required()
+  type: Joi.string().valid('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'time').required()
     .messages({
       'any.only': 'El tipo debe ser uno de: text, textarea, select, checkbox, radio.',
       'any.required': 'El tipo de campo es obligatorio.',
@@ -27,14 +27,22 @@ const createFormSchema = Joi.object({
     .messages({
       'boolean.base': 'El campo "required" debe ser verdadero o falso.',
     }),
-  userId: Joi.string().uuid().required()
+  userId: Joi.string().required()
     .messages({
       'string.guid': 'El ID de usuario debe ser un UUID válido.',
       'any.required': 'El ID de usuario es obligatorio.',
     }),
+  isPublic: Joi.boolean().default(false)
+    .messages({
+      'boolean.base': 'El campo "Es Público" debe ser verdadero o falso.',
+    }),
 });
 
 const updateFormSchema = Joi.object({
+  id: Joi.string().required()
+    .messages({
+      'string.guid': 'El ID de usuario debe ser un UUID válido.',
+    }),
   questionText: Joi.string().min(3).max(255)
     .messages({
       'string.base': 'La pregunta debe ser un texto.',
@@ -45,7 +53,7 @@ const updateFormSchema = Joi.object({
     .messages({
       'string.base': 'La respuesta debe ser un texto.',
     }),
-  type: Joi.string().valid('text', 'textarea', 'select', 'checkbox', 'radio')
+  type: Joi.string().valid('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'time')
     .messages({
       'any.only': 'El tipo debe ser uno de: text, textarea, select, checkbox, radio.',
       'string.base': 'El tipo debe ser un texto.',
@@ -58,9 +66,17 @@ const updateFormSchema = Joi.object({
     .messages({
       'boolean.base': 'El campo "required" debe ser verdadero o falso.',
     }),
-  userId: Joi.string().uuid()
+  isPublic: Joi.boolean().default(false)
+    .messages({
+      'boolean.base': 'El campo "Es Público" debe ser verdadero o falso.',
+    }),
+  userId: Joi.string().required()
     .messages({
       'string.guid': 'El ID de usuario debe ser un UUID válido.',
+    }),
+  createdAt: Joi.date().required()
+    .messages({
+      'string.guid': 'La fecha de creación es requerida.',
     }),
 });
 

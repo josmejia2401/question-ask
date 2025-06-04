@@ -3,7 +3,8 @@ const sequelize = require('../config/database'); // Ajusta esta ruta según tu p
 
 const Token = sequelize.define('Token', {
     id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
     },
     userId: {
@@ -14,7 +15,7 @@ const Token = sequelize.define('Token', {
     },
     token: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -24,7 +25,7 @@ const Token = sequelize.define('Token', {
     },
     expiresAt: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
         field: 'expires_at',
         defaultValue: DataTypes.NOW,
     },

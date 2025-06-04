@@ -104,7 +104,7 @@ module.exports = class JWT {
      */
     static validateToken(token) {
         const rawToken = this._stripBearer(token);
-        return verify(rawToken, constants.JWT.SECRET_VALUE, {
+        return verify(rawToken, constants.JTW_SECRET_VALUE, {
             audience: constants.APP_NAME,
             algorithms: ["HS256"],
         });

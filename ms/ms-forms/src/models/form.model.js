@@ -36,16 +36,22 @@ const Form = sequelize.define('Form', {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     },
-    created_at: {
+    isPublic: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        field: 'is_public',
+    },
+    createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: DataTypes.NOW,
+        field: 'created_at',
     },
 }, {
     tableName: 'forms',
     timestamps: false, // desactivo timestamps porque tienes created_at explícito
     underscored: true,
-    schema: 'questionask', 
+    schema: 'questionask',
 });
 
 module.exports = { Form };
