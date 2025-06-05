@@ -4,19 +4,15 @@ const { CustomError } = require('../errors/errors');
 
 const customFormat = format.printf(({ timestamp, level, message, requestId }) => {
     let logMessage = `[${timestamp}] [${level.toUpperCase()}]${requestId ? ` [reqId: ${requestId}]` : ''} `;
-
     if (message instanceof CustomError) {
         logMessage += `${message.name}: ${message.message}`;
-        // Opcional: agregar stacktrace
         logMessage += `\n${message.error || message.stack}`;
     } else if (message instanceof Error) {
         logMessage += `${message.name}: ${message.message}`;
-        // Opcional: agregar stacktrace
         logMessage += `\n${message.stack}`;
     } else {
-        logMessage += message;
+        logMessage += JSON.stringify(message);
     }
-
     return logMessage;
 });
 

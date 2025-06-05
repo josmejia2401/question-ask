@@ -116,5 +116,5 @@ docker run -d \
 
 o
 
-docker-compose up db
+docker-compose up db redis
 ```

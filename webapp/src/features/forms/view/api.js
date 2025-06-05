@@ -1,9 +1,8 @@
 import { axiosInstance } from '../../../services/fetch';
-import { AuthStore } from '../../../store/index';
 
-export const signIn = async (payload) => {
+export const findAll = async () => {
     try {
-        const res = await axiosInstance.post(`/api/auth/login`, payload, {
+        const res = await axiosInstance.get(`/api/forms`, {
             headers: {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": '*',
@@ -11,8 +10,7 @@ export const signIn = async (payload) => {
                 "Access-Control-Allow-Headers": "*",
                 "access-control-allow-methods": "*"
             },
-        });
-        AuthStore.setToken(res.data.data["accessToken"]);
+        });;
         return res.data;
     } catch (error) {
         throw error;

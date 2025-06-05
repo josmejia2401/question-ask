@@ -22,6 +22,24 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.logout = async (req, res) => {
+  const logger = getRequestLogger(req.requestId);
+  try {
+    const tokenId = req.user.jwtid;
+    const userId = req.user.keyid;
+
+    if (!tokenId || !userId) {
+      return res.status(400).json(badRequest('Token o usuario inválido'));
+    }
+
+    await authService.logout(tokenId, userId);
+    res.status(200).json(success({ message: 'Sesión cerrada correctamente' }));
+  } catch (err) {
+    logger.error(err);
+    res.status(500).json({ message: 'Error al cerrar sesión' });
+  }
+};
+
 exports.requestPasswordReset = async (req, res) => {
   const logger = getRequestLogger(req.requestId);
   try {

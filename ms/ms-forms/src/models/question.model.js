@@ -1,30 +1,36 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Form = sequelize.define('Form', {
-
+const Question = sequelize.define("Question", {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
     },
-    userId: {
+    formId: {
         type: DataTypes.UUID,
         allowNull: false,
-        field: "user_id",
+        field: "form_id",
     },
-    title: {
+    questionText: {
         type: DataTypes.TEXT,
         allowNull: false,
+        field: "question_text",
     },
-    description: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+    type: {
+        type: DataTypes.ENUM('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'Hora'),
+        allowNull: false,
+        validate: {
+            isIn: [['short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'time']],
+        },
     },
-    isPublic: {
+    required: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-        field: "is_public",
+    },
+    order: {
+        type: DataTypes.INTEGER,
+        field: "order",
     },
     createdAt: {
         type: DataTypes.DATE,
@@ -32,10 +38,10 @@ const Form = sequelize.define('Form', {
         field: "created_at",
     },
 }, {
-    tableName: 'forms',
+    tableName: "questions",
     timestamps: false,
     underscored: true,
     schema: 'questionask',
 });
 
-module.exports = { Form };
+module.exports = { Question };

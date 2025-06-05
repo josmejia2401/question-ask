@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { CustomError } from '../utils/custom-error';
 import { AuthStore } from '../store/index';
-const API_BASE = "https://53na7gvfz2.execute-api.us-east-1.amazonaws.com/dev";
+const API_BASE = "http://localhost:3000";
 const buildAndThrowNewError = (error) => {
     console.error(error);
     if (error && error.response) {

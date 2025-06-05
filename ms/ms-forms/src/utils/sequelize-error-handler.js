@@ -29,12 +29,12 @@ function handleSequelizeError(error) {
 
     // Otro error específico de Sequelize
     if (error.name?.startsWith('Sequelize')) {
-        const userMessage = 'Ocurrió un error en la base de datos. Por favor, intente nuevamente o contacte al soporte.';
+        const userMessage = 'Algo salió mal. Por favor intenta nuevamente.';
         return new CustomError(userMessage, 500, error);
     }
 
     // Error desconocido
-    const fallbackMessage = 'Ocurrió un error inesperado al procesar su solicitud. Intente nuevamente más tarde.';
+    const fallbackMessage = 'Algo salió mal. Intente nuevamente más tarde.';
     return new CustomError(fallbackMessage, 500, error);
 }
 

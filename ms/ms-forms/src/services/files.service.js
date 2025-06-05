@@ -10,25 +10,20 @@ class FilesService {
         return path.join(basePath, userId, 'forms', formId, 'images');
     }
 
-    // Listar imágenes disponibles en un formulario
     listImages(userId, formId) {
         const folderPath = this.getFormImagesFolder(userId, formId);
         if (!fs.existsSync(folderPath)) return [];
         try {
             return fs.readdirSync(folderPath).filter(file => {
-                // Opcional: filtrar solo archivos (ignorar carpetas)
                 const fullPath = path.join(folderPath, file);
                 return fs.statSync(fullPath).isFile();
             });
         } catch (err) {
-            // En caso de error devolver array vacío o lanzar error según prefieras
             return [];
         }
     }
 
-    // Obtener ruta completa a imagen específica
     getImagePath(userId, formId, imageName) {
-        // Evitar path traversal (../ etc)
         if (imageName.includes('..') || path.isAbsolute(imageName)) {
             throw new Error('Nombre de imagen inválido');
         }

@@ -57,7 +57,7 @@ exports.updateUser = async (req, res) => {
       return res.status(403).json(forbidden());
     }
     const updatedUser = await userService.updateUser(req.params.id, value);
-    res.status(200).json(updatedUser);
+    res.status(200).json(success(updatedUser));
   } catch (err) {
     logger.error(err);
     handleError(res, err);

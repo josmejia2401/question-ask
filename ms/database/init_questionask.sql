@@ -25,6 +25,54 @@ CREATE TABLE tokens (
     expires_at TIMESTAMPTZ
 );
 
+
+CREATE TABLE forms (
+  id UUID PRIMARY KEY,
+  user_id UUID REFERENCES users(id),
+  title TEXT NOT NULL,
+  description TEXT,
+  is_public BOOLEAN DEFAULT false,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE questions (
+  id UUID PRIMARY KEY,
+  form_id UUID REFERENCES forms(id) ON DELETE CASCADE,
+  question_text TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'Hora')),
+  required BOOLEAN DEFAULT false,
+  "order" INT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE question_options (
+  id UUID PRIMARY KEY,
+  question_id UUID REFERENCES questions(id) ON DELETE CASCADE,
+  text TEXT NOT NULL
+);
+
+CREATE TABLE question_option_images (
+  id UUID PRIMARY KEY,
+  option_id UUID REFERENCES question_options(id) ON DELETE CASCADE,
+  image_path TEXT NOT NULL
+);
+
+CREATE TABLE responses (
+  id UUID PRIMARY KEY,
+  form_id UUID REFERENCES forms(id) ON DELETE CASCADE,
+  submitted_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE answers (
+  id UUID PRIMARY KEY,
+  response_id UUID REFERENCES responses(id) ON DELETE CASCADE,
+  question_id UUID REFERENCES questions(id),
+  answer_text TEXT
+);
+
+
+
+
 -- Crear tabla de preguntas
 CREATE TABLE forms (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

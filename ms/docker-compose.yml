@@ -57,7 +57,7 @@ services:
       - "3000:3000"
     volumes:
       - ./ms-forms:/usr/src/app
-      - ./uploads:/usr/src/app/uploads
+      - ./uploads_data:/usr/uploads
     networks:
       - questionask_net
     command: [ "npm", "start" ]
@@ -73,6 +73,7 @@ services:
 volumes:
   db_data:
   redis_data:
+  uploads_data:
 
 networks:
   questionask_net:

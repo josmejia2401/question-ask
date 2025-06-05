@@ -10,7 +10,6 @@ class FormService {
   async createForm(data) {
     try {
       const form = await Form.create(data);
-
       // Cachear el nuevo formulario y la lista del usuario
       redis.set(`forms:${form.id}`, JSON.stringify(form), 'EX', 1800);
       redis.del(`forms:user:${form.userId}`); // Invalida la lista por usuario
@@ -45,7 +44,9 @@ class FormService {
 
       if (!form) {
         form = await Form.findByPk(id);
-        if (form) redis.set(cacheKey, JSON.stringify(form), 'EX', 3600);
+        if (form) {
+          redis.set(cacheKey, JSON.stringify(form), 'EX', 3600);
+        }
       }
 
       if (isEmpty(form)) {
@@ -88,7 +89,6 @@ class FormService {
       if (isEmpty(form)) throw new CustomError(`Elemento con ID ${id} no encontrado`, 404);
       if (userId && form.userId !== userId) throw new CustomError('¡Ups! Elemento no permitido', 403);
 
-      // 2. Elimina los archivos asociados
       filesService.deleteFormFiles(userId, form.id);
 
       await form.destroy();

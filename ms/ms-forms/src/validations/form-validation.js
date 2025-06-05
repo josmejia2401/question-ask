@@ -19,7 +19,7 @@ const createFormSchema = Joi.object({
       'any.required': 'El tipo de campo es obligatorio.',
       'string.base': 'El tipo debe ser un texto.',
     }),
-  options: Joi.array().items(Joi.string()).optional()
+  options: Joi.array().items(Joi.object()).optional()
     .messages({
       'array.base': 'Las opciones deben ser una lista de textos.',
     }),
@@ -58,7 +58,7 @@ const updateFormSchema = Joi.object({
       'any.only': 'El tipo debe ser uno de: text, textarea, select, checkbox, radio.',
       'string.base': 'El tipo debe ser un texto.',
     }),
-  options: Joi.array().items(Joi.string())
+  options: Joi.array().items(Joi.object())
     .messages({
       'array.base': 'Las opciones deben ser una lista de textos.',
     }),
