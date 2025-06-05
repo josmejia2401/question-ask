@@ -1,86 +1,57 @@
 const Joi = require('joi');
 
-const createFormSchema = Joi.object({
-  questionText: Joi.string().min(3).max(255).required()
-    .messages({
-      'string.base': 'La pregunta debe ser un texto.',
-      'string.empty': 'La pregunta no puede estar vacía.',
-      'string.min': 'La pregunta debe tener al menos {#limit} caracteres.',
-      'string.max': 'La pregunta no puede exceder los {#limit} caracteres.',
-      'any.required': 'La pregunta es obligatoria.',
-    }),
-  answer: Joi.string().allow(null, '')
-    .messages({
-      'string.base': 'La respuesta debe ser un texto.',
-    }),
-  type: Joi.string().valid('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'time').required()
-    .messages({
-      'any.only': 'El tipo debe ser uno de: text, textarea, select, checkbox, radio.',
-      'any.required': 'El tipo de campo es obligatorio.',
-      'string.base': 'El tipo debe ser un texto.',
-    }),
-  options: Joi.array().items(Joi.object()).optional()
-    .messages({
-      'array.base': 'Las opciones deben ser una lista de textos.',
-    }),
-  required: Joi.boolean().default(false)
-    .messages({
-      'boolean.base': 'El campo "required" debe ser verdadero o falso.',
-    }),
-  userId: Joi.string().required()
-    .messages({
-      'string.guid': 'El ID de usuario debe ser un UUID válido.',
-      'any.required': 'El ID de usuario es obligatorio.',
-    }),
-  isPublic: Joi.boolean().default(false)
-    .messages({
-      'boolean.base': 'El campo "Es Público" debe ser verdadero o falso.',
-    }),
+const imageSchema = Joi.object({
+  imagePath: Joi.string().optional().messages({
+    'any.required': `"imagePath" es requerido`
+  }),
 });
 
-const updateFormSchema = Joi.object({
-  id: Joi.string().required()
-    .messages({
-      'string.guid': 'El ID de usuario debe ser un UUID válido.',
-    }),
-  questionText: Joi.string().min(3).max(255)
-    .messages({
-      'string.base': 'La pregunta debe ser un texto.',
-      'string.min': 'La pregunta debe tener al menos {#limit} caracteres.',
-      'string.max': 'La pregunta no puede exceder los {#limit} caracteres.',
-    }),
-  answer: Joi.string().allow(null, '')
-    .messages({
-      'string.base': 'La respuesta debe ser un texto.',
-    }),
-  type: Joi.string().valid('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'time')
-    .messages({
-      'any.only': 'El tipo debe ser uno de: text, textarea, select, checkbox, radio.',
-      'string.base': 'El tipo debe ser un texto.',
-    }),
-  options: Joi.array().items(Joi.object())
-    .messages({
-      'array.base': 'Las opciones deben ser una lista de textos.',
-    }),
-  required: Joi.boolean()
-    .messages({
-      'boolean.base': 'El campo "required" debe ser verdadero o falso.',
-    }),
-  isPublic: Joi.boolean().default(false)
-    .messages({
-      'boolean.base': 'El campo "Es Público" debe ser verdadero o falso.',
-    }),
-  userId: Joi.string().required()
-    .messages({
-      'string.guid': 'El ID de usuario debe ser un UUID válido.',
-    }),
-  createdAt: Joi.date().required()
-    .messages({
-      'string.guid': 'La fecha de creación es requerida.',
-    }),
+const optionSchema = Joi.object({
+  text: Joi.string().required().messages({
+    'string.base': `"text" debe ser un texto`,
+    'any.required': `"text" es requerido`
+  }),
+  images: Joi.array().items(imageSchema).optional().messages({
+    'array.base': `"images" debe ser un arreglo`
+  }),
 });
+
+const questionSchema = Joi.object({
+  questionText: Joi.string().required().messages({
+    'string.base': `"questionText" debe ser un texto`,
+    'any.required': `"questionText" es requerido`
+  }),
+  type: Joi.string()
+    .valid('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'Hora', 'radio')
+    .required()
+    .messages({
+      'any.only': `"type" debe ser uno de: short, long, multiple, checkbox, rating, date, Hora, radio`,
+      'any.required': `"type" es requerido`
+    }),
+  required: Joi.boolean().default(false),
+  order: Joi.number().integer().required().messages({
+    'number.base': `"order" debe ser un número`,
+    'any.required': `"order" es requerido`
+  }),
+  options: Joi.array().items(optionSchema).optional().messages({
+    'array.base': `"options" debe ser un arreglo`
+  }),
+});
+
+const formSchema = Joi.object({
+  title: Joi.string().required().messages({
+    'string.base': `"title" debe ser un texto`,
+    'any.required': `"title" es requerido`
+  }),
+  description: Joi.string().allow(null, '').optional(),
+  isPublic: Joi.boolean().default(false),
+  questions: Joi.array().items(questionSchema).required().messages({
+    'array.base': `"questions" debe ser un arreglo`,
+    'any.required': `"questions" es requerido`
+  }),
+});
+
 
 module.exports = {
-  validateCreateForm: (data) => createFormSchema.validate(data, { abortEarly: false }),
-  validateUpdateForm: (data) => updateFormSchema.validate(data, { abortEarly: false }),
+  validateForm: (data) => formSchema.validate(data, { abortEarly: false }),
 };

@@ -15,7 +15,7 @@ exports.getAllForms = async (req, res) => {
   const logger = getRequestLogger(req.requestId);
   try {
     const userId = req.user.keyid;
-    const forms = await formService.getAllFormsByUserId(userId);
+    const forms = await formService.findAll(userId, true);
     res.status(200).json(success(forms));
   } catch (err) {
     logger.error(err);
@@ -27,7 +27,7 @@ exports.getFormById = async (req, res) => {
   const logger = getRequestLogger(req.requestId);
   try {
     const userId = req.user.keyid;
-    const form = await formService.getFormById(req.params.id, userId);
+    const form = await formService.findById(req.params.id, userId);
     res.status(200).json(success(form));
   } catch (err) {
     logger.error(err);
@@ -38,13 +38,13 @@ exports.getFormById = async (req, res) => {
 exports.createForm = async (req, res) => {
   const logger = getRequestLogger(req.requestId);
   try {
-    const { error, value } = formValidator.validateCreateForm(req.body);
+    const { error, value } = formValidator.validateForm(req.body);
     if (error) {
       logger.error(badRequest(error.details[0].message));
       return res.status(400).json(badRequest(error.details[0].message));
     }
     const userId = req.user.keyid;
-    const newForm = await formService.createForm({ ...value, userId });
+    const newForm = await formService.create({ ...value, userId });
     res.status(201).json(created(newForm));
   } catch (err) {
     logger.error(err);
@@ -55,13 +55,13 @@ exports.createForm = async (req, res) => {
 exports.updateForm = async (req, res) => {
   const logger = getRequestLogger(req.requestId);
   try {
-    const { error, value } = formValidator.validateUpdateForm(req.body);
+    const { error, value } = formValidator.validateForm(req.body);
     if (error) {
       logger.error(badRequest(error.details[0].message));
       return res.status(400).json(badRequest(error.details[0].message));
     }
     const userId = req.user.keyid;
-    const updatedForm = await formService.updateForm(req.params.id, { ...value, userId }, userId);
+    const updatedForm = await formService.update(req.params.id, { ...value, userId }, userId);
     res.status(200).json(success(updatedForm));
   } catch (err) {
     logger.error(err);
@@ -73,7 +73,7 @@ exports.deleteForm = async (req, res) => {
   const logger = getRequestLogger(req.requestId);
   try {
     const userId = req.user.keyid;
-    await formService.deleteForm(req.params.id, userId);
+    await formService.delete(req.params.id, userId);
     res.status(204).json(success());
   } catch (err) {
     logger.error(err);

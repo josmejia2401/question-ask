@@ -25,6 +25,13 @@ CREATE TABLE tokens (
     expires_at TIMESTAMPTZ
 );
 
+CREATE TABLE password_resets (
+  id UUID PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  token VARCHAR(255) NOT NULL,
+  expires_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 CREATE TABLE forms (
   id UUID PRIMARY KEY,
@@ -68,28 +75,4 @@ CREATE TABLE answers (
   response_id UUID REFERENCES responses(id) ON DELETE CASCADE,
   question_id UUID REFERENCES questions(id),
   answer_text TEXT
-);
-
-
-
-
--- Crear tabla de preguntas
-CREATE TABLE forms (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    question_text TEXT NOT NULL,
-    answer TEXT,
-    type TEXT NOT NULL CHECK (type IN ('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'Hora')),
-    options JSONB, -- array JSON dinámico si aplica (ej: ["opción 1", "opción 2"])
-    required BOOLEAN DEFAULT FALSE,
-    is_public BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE
-);
-
-CREATE TABLE password_resets (
-  id UUID PRIMARY KEY,
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  token VARCHAR(255) NOT NULL,
-  expires_at TIMESTAMP NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

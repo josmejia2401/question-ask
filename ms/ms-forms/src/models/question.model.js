@@ -18,11 +18,11 @@ const Question = sequelize.define("Question", {
         field: "question_text",
     },
     type: {
-        type: DataTypes.ENUM('short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'Hora'),
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
             isIn: [['short', 'long', 'multiple', 'checkbox', 'rating', 'date', 'time']],
-        },
+        }
     },
     required: {
         type: DataTypes.BOOLEAN,

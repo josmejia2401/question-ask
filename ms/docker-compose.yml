@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - questionask_db_data:/var/lib/postgresql/data
     networks:
       - questionask_net
     ports:
@@ -31,7 +31,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_data:/data
+      - questionask_redis_data:/data
     env_file:
       - .env
     deploy:
@@ -57,7 +57,7 @@ services:
       - "3000:3000"
     volumes:
       - ./ms-forms:/usr/src/app
-      - ./uploads_data:/usr/uploads
+      - ./questionask_uploads_data:/usr/uploads
     networks:
       - questionask_net
     command: [ "npm", "start" ]
@@ -71,9 +71,9 @@ services:
           memory: 256M
 
 volumes:
-  db_data:
-  redis_data:
-  uploads_data:
+  questionask_db_data:
+  questionask_redis_data:
+  questionask_uploads_data:
 
 networks:
   questionask_net:
