@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import { Bars3Icon, BellIcon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, BellIcon, XMarkIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import "./styles.css";
 import { Link } from "react-router-dom";
 import LocalStorageWatcher from '../../store/localStorageWatcher';
@@ -26,7 +26,7 @@ class Layout extends React.Component {
       navigation: [
         {
           name: 'Tablero',
-          href: '#',
+          href: '/dashboard',
           current: true,
           children: []
         },
@@ -36,10 +36,15 @@ class Layout extends React.Component {
           current: false,
           children: [
             {
-              name: 'Crear',
-              href: '#',
+              name: 'Ver',
+              href: '/forms/viewer',
               current: false,
-            }
+            },
+            {
+              name: 'Crear',
+              href: '/forms/create',
+              current: false,
+            },
           ]
         },
         {
@@ -59,13 +64,15 @@ class Layout extends React.Component {
         { name: 'Mi cuenta', href: '#' },
         { name: 'Opciones', href: '#' },
         { name: 'Salir', href: '#' },
-      ]
-
+      ],
+      // Estado para controlar los submenús en mobile
+      mobileSubmenusOpen: {},
     };
     this.checkDocumentState = this.checkDocumentState.bind(this);
     this.handleClickOpenNav = this.handleClickOpenNav.bind(this);
     this.detectChangesStorage = this.detectChangesStorage.bind(this);
     this.goToAuth = this.goToAuth.bind(this);
+    this.handleToggleMobileSubmenu = this.handleToggleMobileSubmenu.bind(this);
   }
 
   componentDidMount() {
@@ -105,8 +112,18 @@ class Layout extends React.Component {
     this.goToAuth();
   }
 
+  // Nueva función para alternar submenús en móvil
+  handleToggleMobileSubmenu(idx) {
+    this.setState((prev) => ({
+      mobileSubmenusOpen: {
+        ...prev.mobileSubmenusOpen,
+        [idx]: !prev.mobileSubmenusOpen[idx]
+      }
+    }));
+  }
+
   render() {
-    const { navigation, user, userNavigation } = this.state;
+    const { navigation, user, userNavigation, mobileSubmenusOpen } = this.state;
     const { children } = this.props;
     return (
       <>
@@ -149,15 +166,15 @@ class Layout extends React.Component {
                                 {item.children.map((child) => (
                                   <MenuItem key={child.name}>
                                     {({ active }) => (
-                                      <a
-                                        href={child.href}
+                                      <Link
+                                        to={child.href}
                                         className={classNames(
                                           active ? 'bg-gray-100 text-indigo-600' : 'text-gray-700',
                                           'block px-4 py-2 text-sm'
                                         )}
                                       >
                                         {child.name}
-                                      </a>
+                                      </Link>
                                     )}
                                   </MenuItem>
                                 ))}
@@ -165,9 +182,9 @@ class Layout extends React.Component {
                             </MenuItems>
                           </Menu>
                         ) : (
-                          <a
+                          <Link
                             key={item.name}
-                            href={item.href}
+                            to={item.href}
                             className={classNames(
                               item.current
                                 ? 'bg-indigo-600 text-white'
@@ -176,13 +193,11 @@ class Layout extends React.Component {
                             )}
                           >
                             {item.name}
-                          </a>
+                          </Link>
                         )
                       ))}
                     </div>
                   </div>
-
-
                 </div>
                 <div className="hidden md:block">
                   <div className="ml-4 flex items-center md:ml-6">
@@ -234,21 +249,60 @@ class Layout extends React.Component {
               </div>
             </div>
 
+            {/* Mobile menu panel */}
             <DisclosurePanel className="md:hidden">
               <div className="space-y-1 px-2 pt-2 pb-3 sm:px-3">
-                {navigation.map((item) => (
-                  <DisclosureButton
-                    key={item.name}
-                    as="a"
-                    href={item.href}
-                    aria-current={item.current ? 'page' : undefined}
-                    className={classNames(
-                      item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                      'block rounded-md px-3 py-2 text-base font-medium',
-                    )}
-                  >
-                    {item.name}
-                  </DisclosureButton>
+                {navigation.map((item, idx) => (
+                  item.children && item.children.length > 0 ? (
+                    <div key={item.name} className="">
+                      <button
+                        type="button"
+                        className={classNames(
+                          'flex w-full items-center justify-between rounded-md px-3 py-2 text-base font-medium focus:outline-none transition',
+                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        )}
+                        onClick={() => this.handleToggleMobileSubmenu(idx)}
+                        aria-expanded={!!mobileSubmenusOpen[idx]}
+                        aria-controls={`mobile-submenu-${idx}`}
+                      >
+                        <span>{item.name}</span>
+                        {mobileSubmenusOpen[idx] ? (
+                          <ChevronUpIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        ) : (
+                          <ChevronDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        )}
+                      </button>
+                      <div
+                        id={`mobile-submenu-${idx}`}
+                        className={classNames(
+                          'pl-6 transition-all duration-200',
+                          mobileSubmenusOpen[idx] ? 'block py-1' : 'hidden'
+                        )}
+                      >
+                        {item.children.map((child) => (
+                          <a
+                            key={child.name}
+                            href={child.href}
+                            className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                          >
+                            {child.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <a
+                      key={item.name}
+                      href={item.href}
+                      aria-current={item.current ? 'page' : undefined}
+                      className={classNames(
+                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'block rounded-md px-3 py-2 text-base font-medium',
+                      )}
+                    >
+                      {item.name}
+                    </a>
+                  )
                 ))}
               </div>
               <div className="border-t border-gray-700 pt-4 pb-3">
