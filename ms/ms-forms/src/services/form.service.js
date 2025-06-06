@@ -193,6 +193,8 @@ class FormService {
         return form;
       });
 
+      filesService.deleteFormFiles(userId, form.id);
+
       const formSearched = await Form.findByPk(form.id, {
         include: [{
           model: Question,

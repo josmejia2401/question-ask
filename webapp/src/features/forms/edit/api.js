@@ -36,3 +36,27 @@ export const updateById = async (id, payload) => {
         throw error;
     }
 }
+
+
+export const uploadFile = async (id, formData) => {
+    try {
+        const res = await axiosInstance.post(`/api/files/forms/${id}/upload`, formData, {
+            headers: {},
+        });
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const downloadFile = async (formId, filename) => {
+    try {
+        const res = await axiosInstance.get(`/api/files/forms/${formId}/images/${filename}`, {
+            responseType: 'blob',
+            headers: {},
+        });
+        return URL.createObjectURL(res.data);
+    } catch (error) {
+        return null;
+    }
+}

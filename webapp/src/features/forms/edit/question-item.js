@@ -191,7 +191,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                       {option.images.map((img, i) => (
                         <img
                           key={i}
-                          //src={URL.createObjectURL(img)}
+                          src={img.path || URL.createObjectURL(img)}
                           alt={`Imagen ${i + 1}`}
                           className="h-16 w-16 object-cover rounded"
                         />
