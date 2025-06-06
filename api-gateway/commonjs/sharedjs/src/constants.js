@@ -5,7 +5,7 @@ module.exports = {
     AWS_REGION: config.AWS_REGION,
     APP_NAME: config.APP_NAME,
     JWT: {
-        SECRET_VALUE: config.JTW_SECRET_VALUE,
+        SECRET_VALUE: config.JWT_SECRET_VALUE,
         TOKEN_LIFE: config.JWT_TOKEN_LIFE
     },
     TABLES: {

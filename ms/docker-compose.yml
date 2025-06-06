@@ -1,10 +1,10 @@
 version: '3.9'
 
 services:
-  db:
+  questionask_db:
     build:
       context: ./database
-    container_name: questionask-db
+    container_name: questionask_db
     restart: always
     env_file:
       - .env
@@ -23,10 +23,10 @@ services:
           cpus: '0.5'
           memory: 256M
 
-  redis:
+  questionask_redis:
     image: redis:7
-    container_name: questionask-redis
-    restart: unless-stopped
+    container_name: questionask_redis
+    restart: always
     command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru", "--appendonly", "yes"]
     ports:
       - "6379:6379"
@@ -34,6 +34,8 @@ services:
       - questionask_redis_data:/data
     env_file:
       - .env
+    networks:
+      - questionask_net
     deploy:
       resources:
         limits:
@@ -43,16 +45,16 @@ services:
           memory: 256M
           cpus: "0.3"
 
-  ms-forms:
+  ms_forms:
     build:
       context: ./ms-forms
-    container_name: questionask-ms-forms
+    container_name: questionaskmsforms
     restart: always
     env_file:
       - .env
     depends_on:
-      - db
-      - redis
+      - questionask_db
+      - questionask_redis
     ports:
       - "3000:3000"
     volumes:

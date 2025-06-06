@@ -33,7 +33,7 @@ class AuthService {
             keyid: user.id,
             role: user.role ?? "user",
             tokenId: tokenEntry.id
-        }, constants.JTW_SECRET_VALUE, {
+        }, constants.JWT_SECRET_VALUE, {
             algorithm: 'HS256',
             audience: 'questionask-webapp',
             subject: user.username,
@@ -77,7 +77,7 @@ class AuthService {
                 keyid: user.id,
                 role: user.role,
                 tokenId: tokenEntry.id
-            }, constants.JTW_SECRET_VALUE, {
+            }, constants.JWT_SECRET_VALUE, {
                 algorithm: 'HS256',
                 audience: 'questionask-webapp',
                 subject: user.username,

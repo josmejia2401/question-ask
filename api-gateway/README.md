@@ -132,7 +132,7 @@ video
 - LOGGER_LEVEL
 - AWS_REGION
 - APP_NAME
-- JTW_SECRET_VALUE
+- JWT_SECRET_VALUE
 - JWT_TOKEN_LIFE
 
 ## Pasos e instalación

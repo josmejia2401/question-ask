@@ -57,7 +57,7 @@ module.exports = class JWT {
     static refreshToken(token) {
         try {
             const rawToken = this._stripBearer(token);
-            const decoded = verify(rawToken, constants.JTW_SECRET_VALUE, {
+            const decoded = verify(rawToken, constants.JWT_SECRET_VALUE, {
                 audience: constants.APP_NAME,
                 algorithms: ["HS256"],
             });
@@ -93,7 +93,7 @@ module.exports = class JWT {
                 keyid: payload.keyid, // ID del usuario
                 role: payload.role
             },
-            constants.JTW_SECRET_VALUE,
+            constants.JWT_SECRET_VALUE,
             options
         );
         return token;
@@ -104,7 +104,7 @@ module.exports = class JWT {
      */
     static validateToken(token) {
         const rawToken = this._stripBearer(token);
-        return verify(rawToken, constants.JTW_SECRET_VALUE, {
+        return verify(rawToken, constants.JWT_SECRET_VALUE, {
             audience: constants.APP_NAME,
             algorithms: ["HS256"],
         });

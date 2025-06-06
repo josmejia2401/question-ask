@@ -13,13 +13,13 @@ const typeLabels = {
   time: "Hora"
 };
 
-const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
+const SortableItem = ({ question, index, onUpdate, onRemove }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
-    updateQuestion(index, { ...question, [name]: value, order: index });
+    onUpdate(index, { ...question, [name]: value });
   }
 
-  const handleRemove = () => removeQuestion(index);
+  const handleRemove = () => onRemove(index);
 
   return (
     <div className="border rounded p-4 bg-white shadow-sm space-y-4">
@@ -61,10 +61,10 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
         <div className="space-y-3">
           <input
             type="text"
-            value={''}
+            value={question.answer || ''}
             disabled
             onChange={(e) =>
-              updateQuestion(index, { ...question, answer: e.target.value })
+              onUpdate(index, { ...question, answer: e.target.value })
             }
             placeholder="Respuesta del usuario"
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -77,7 +77,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               id={`required-${index}`}
               checked={question.required || false}
               onChange={(e) =>
-                updateQuestion(index, { ...question, required: e.target.checked })
+                onUpdate(index, { ...question, required: e.target.checked })
               }
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
@@ -95,7 +95,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
           <textarea
             value={question.answer || ''}
             onChange={(e) =>
-              updateQuestion(index, { ...question, answer: e.target.value })
+              onUpdate(index, { ...question, answer: e.target.value })
             }
             disabled
             placeholder="Respuesta larga del usuario"
@@ -110,7 +110,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               id={`required-long-${index}`}
               checked={question.required || false}
               onChange={(e) =>
-                updateQuestion(index, { ...question, required: e.target.checked })
+                onUpdate(index, { ...question, required: e.target.checked })
               }
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
@@ -140,8 +140,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                     onChange={(e) => {
                       const updatedOptions = [...question.options];
                       updatedOptions[idx].text = e.target.value;
-                      updatedOptions[idx].createdAt = new Date().toISOString();
-                      updateQuestion(index, { ...question, options: updatedOptions });
+                      onUpdate(index, { ...question, options: updatedOptions });
                     }}
                     className="flex-1 border rounded px-3 py-1"
                     placeholder="Texto de la opción"
@@ -152,7 +151,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                     type="button"
                     onClick={() => {
                       const updatedOptions = question.options.filter((_, i) => i !== idx);
-                      updateQuestion(index, { ...question, options: updatedOptions });
+                      onUpdate(index, { ...question, options: updatedOptions });
                     }}
                     className="text-red-600 hover:text-red-800"
                     title="Eliminar opción"
@@ -179,7 +178,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                           : { text: updatedOptions[idx], images: [] };
 
                         updatedOptions[idx] = { ...currentOption, images: files };
-                        updateQuestion(index, { ...question, options: updatedOptions });
+                        onUpdate(index, { ...question, options: updatedOptions });
                       }}
                       className="hidden"
                     />
@@ -191,7 +190,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                       {option.images.map((img, i) => (
                         <img
                           key={i}
-                          src={img.path || URL.createObjectURL(img)}
+                          src={URL.createObjectURL(img)}
                           alt={`Imagen ${i + 1}`}
                           className="h-16 w-16 object-cover rounded"
                         />
@@ -207,7 +206,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               type="button"
               onClick={() => {
                 const updatedOptions = [...question.options, { text: '', images: [] }];
-                updateQuestion(index, { ...question, options: updatedOptions });
+                onUpdate(index, { ...question, options: updatedOptions });
               }}
               className="text-indigo-600 hover:underline text-sm mt-2"
             >
@@ -221,7 +220,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                 id={`required-multiple-${index}`}
                 checked={question.required || false}
                 onChange={(e) =>
-                  updateQuestion(index, { ...question, required: e.target.checked })
+                  onUpdate(index, { ...question, required: e.target.checked })
                 }
                 className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
               />
@@ -249,7 +248,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                     onChange={(e) => {
                       const updatedOptions = [...question.options];
                       updatedOptions[idx].text = e.target.value;
-                      updateQuestion(index, { ...question, options: updatedOptions });
+                      onUpdate(index, { ...question, options: updatedOptions });
                     }}
                     className="flex-1 border rounded px-3 py-1"
                     placeholder="Texto de la opción"
@@ -260,7 +259,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                     type="button"
                     onClick={() => {
                       const updatedOptions = question.options.filter((_, i) => i !== idx);
-                      updateQuestion(index, { ...question, options: updatedOptions });
+                      onUpdate(index, { ...question, options: updatedOptions });
                     }}
                     className="text-red-600 hover:text-red-800"
                     title="Eliminar opción"
@@ -287,7 +286,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
                           : { text: updatedOptions[idx], images: [] };
 
                         updatedOptions[idx] = { ...currentOption, images: files };
-                        updateQuestion(index, { ...question, options: updatedOptions });
+                        onUpdate(index, { ...question, options: updatedOptions });
                       }}
                     />
                   </label>
@@ -313,7 +312,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               type="button"
               onClick={() => {
                 const updatedOptions = [...question.options, { text: '', images: [] }];
-                updateQuestion(index, { ...question, options: updatedOptions });
+                onUpdate(index, { ...question, options: updatedOptions });
               }}
               className="text-indigo-600 hover:underline text-sm mt-2"
             >
@@ -327,7 +326,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               type="checkbox"
               id={`required-${index}`}
               checked={question.required || false}
-              onChange={(e) => updateQuestion(index, { ...question, required: e.target.checked })}
+              onChange={(e) => onUpdate(index, { ...question, required: e.target.checked })}
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
             <label htmlFor={`required-${index}`} className="text-sm text-gray-700">
@@ -347,7 +346,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
             multiple
             onChange={(e) => {
               const files = Array.from(e.target.files || []).slice(0, 3); // máximo 3 archivos, ajusta si quieres otro límite
-              updateQuestion(index, { ...question, files });
+              onUpdate(index, { ...question, files });
             }}
             disabled
             className="border rounded px-3 py-2"
@@ -369,7 +368,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               id={`required-file-${index}`}
               checked={question.required || false}
               onChange={(e) =>
-                updateQuestion(index, { ...question, required: e.target.checked })
+                onUpdate(index, { ...question, required: e.target.checked })
               }
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
@@ -392,7 +391,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
             multiple
             onChange={(e) => {
               const files = Array.from(e.target.files || []).slice(0, 3); // máximo 3 archivos, ajusta si quieres otro límite
-              updateQuestion(index, { ...question, files });
+              onUpdate(index, { ...question, files });
             }}
             className="border rounded px-3 py-2"
           />
@@ -413,7 +412,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               id={`required-file-${index}`}
               checked={question.required || false}
               onChange={(e) =>
-                updateQuestion(index, { ...question, required: e.target.checked })
+                onUpdate(index, { ...question, required: e.target.checked })
               }
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
@@ -434,7 +433,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               <button
                 key={star}
                 type="button"
-                onClick={() => updateQuestion(index, { ...question, answer: star })}
+                onClick={() => onUpdate(index, { ...question, answer: star })}
                 className={`text-2xl ${question.answer >= star ? 'text-yellow-400' : 'text-gray-300'
                   } focus:outline-none`}
                 aria-label={`Calificación ${star} estrellas`}
@@ -452,7 +451,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               id={`required-rating-${index}`}
               checked={question.required || false}
               onChange={(e) =>
-                updateQuestion(index, { ...question, required: e.target.checked })
+                onUpdate(index, { ...question, required: e.target.checked })
               }
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
@@ -473,7 +472,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
             type="date"
             value={question.answer || ''}
             onChange={(e) =>
-              updateQuestion(index, { ...question, answer: e.target.value })
+              onUpdate(index, { ...question, answer: e.target.value })
             }
             disabled
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -486,7 +485,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               id={`required-date-${index}`}
               checked={question.required || false}
               onChange={(e) =>
-                updateQuestion(index, { ...question, required: e.target.checked })
+                onUpdate(index, { ...question, required: e.target.checked })
               }
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
@@ -507,7 +506,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
             type="time"
             value={question.answer || ''}
             onChange={(e) =>
-              updateQuestion(index, { ...question, answer: e.target.value })
+              onUpdate(index, { ...question, answer: e.target.value })
             }
             disabled
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -520,7 +519,7 @@ const SortableItem = ({ question, index, updateQuestion, removeQuestion }) => {
               id={`required-time-${index}`}
               checked={question.required || false}
               onChange={(e) =>
-                updateQuestion(index, { ...question, required: e.target.checked })
+                onUpdate(index, { ...question, required: e.target.checked })
               }
               className="h-4 w-4 text-indigo-600 border-gray-300 rounded"
             />
