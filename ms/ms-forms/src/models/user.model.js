@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Ajusta esta ruta según tu proyecto
+const sequelize = require('../helpers/config/database'); // Ajusta esta ruta según tu proyecto
 
 const User = sequelize.define('User', {
     id: {

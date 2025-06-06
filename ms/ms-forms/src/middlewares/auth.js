@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const { Token } = require('../models/token.model');
-const JWT = require('../utils/jwt');
-const { forbidden, unAuthorized } = require('../utils/response');
+const JWT = require('../helpers/utils/jwt');
+const { forbidden, unAuthorized } = require('../helpers/utils/response');
 
 async function ensureAuthenticated(req, res, next) {
   const auth = req.headers.authorization || req.headers.Authorization;

@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const constants = require('../utils/constants');
+const constants = require('../constants');
 
 console.log(constants.DATABASE_URL);
 const sequelize = new Sequelize(constants.DATABASE_URL, {

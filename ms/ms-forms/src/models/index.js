@@ -1,4 +1,4 @@
-const sequelize = require('../config/database');
+const sequelize = require('../helpers/config/database');
 
 const { Form } = require('./form.model');
 const { Question } = require('./question.model');

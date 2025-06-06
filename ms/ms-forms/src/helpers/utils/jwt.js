@@ -1,5 +1,5 @@
 const { sign, decode, verify } = require("jsonwebtoken");
-const constants = require("./constants");
+const constants = require("../constants");
 
 module.exports = class JWT {
     /**

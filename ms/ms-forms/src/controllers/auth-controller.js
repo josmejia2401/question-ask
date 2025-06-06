@@ -1,8 +1,8 @@
 // ms-forms/src/controllers/authController.js
 const authService = require('../services/auth.service');
-const getRequestLogger = require('../utils/request-logger');
-const { badRequest, success, buildError } = require('../utils/response');
-const authValidator = require('../validations/auth-validator');
+const getRequestLogger = require('../helpers/utils/request-logger');
+const { badRequest, success, buildError } = require('../helpers/utils/response');
+const authValidator = require('../helpers/validations/auth-validator');
 
 exports.login = async (req, res) => {
   const logger = getRequestLogger(req.requestId);

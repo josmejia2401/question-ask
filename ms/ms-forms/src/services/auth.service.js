@@ -2,9 +2,9 @@ const bcrypt = require('bcrypt');
 const crypto = require("crypto");
 const { User } = require('../models/user.model');
 const { Token } = require('../models/token.model');
-const constants = require('../utils/constants');
-const JWT = require('../utils/jwt');
-const { CustomError } = require('../errors/errors');
+const constants = require('../helpers/constants');
+const JWT = require('../helpers/utils/jwt');
+const { CustomError } = require('../helpers/errors/errors');
 const { Op } = require('sequelize');
 const { PasswordReset } = require('../models/password-reset.model');
 

@@ -1,7 +1,7 @@
 const userService = require('../services/user.service');
-const getRequestLogger = require('../utils/request-logger');
-const { internalServerError, success, badRequest, forbidden, created } = require('../utils/response');
-const userValidator = require('../validations/users-validation');
+const getRequestLogger = require('../helpers/utils/request-logger');
+const { internalServerError, success, badRequest, forbidden, created } = require('../helpers/utils/response');
+const userValidator = require('../helpers/validations/users-validation');
 
 function handleError(res, err) {
   if (err.name === 'CustomError') {

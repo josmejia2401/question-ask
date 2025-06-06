@@ -1,11 +1,11 @@
-const { CustomError } = require('../errors/errors');
-const redis = require('../utils/redis-client');
-const { handleSequelizeError } = require('../utils/sequelize-error-handler');
-const { isEmpty } = require('../utils/utils');
+const { CustomError } = require('../helpers/errors/errors');
+const redis = require('../helpers/utils/redis-client');
+const { handleSequelizeError } = require('../helpers/utils/sequelize-error-handler');
+const { isEmpty } = require('../helpers/utils/utils');
 const filesService = require('./files.service'); // ajusta ruta si es necesario
 
 const { sequelize, Form, Question, QuestionOption, QuestionOptionImage } = require('../models');
-const removeSnakeCaseDuplicates = require('../utils/camel-case');
+const removeSnakeCaseDuplicates = require('../helpers/utils/camel-case');
 
 class FormService {
 

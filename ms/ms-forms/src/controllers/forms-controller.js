@@ -1,7 +1,7 @@
 const formService = require('../services/form.service');
-const formValidator = require('../validations/form-validation');
-const { internalServerError, success, badRequest, created } = require('../utils/response');
-const getRequestLogger = require('../utils/request-logger');
+const formValidator = require('../helpers/validations/form-validation');
+const { internalServerError, success, badRequest, created } = require('../helpers/utils/response');
+const getRequestLogger = require('../helpers/utils/request-logger');
 
 function handleError(res, err) {
   if (err.name === 'CustomError') {

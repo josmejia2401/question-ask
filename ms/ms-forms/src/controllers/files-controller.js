@@ -1,7 +1,7 @@
-const getRequestLogger = require("../utils/request-logger");
+const getRequestLogger = require("../helpers/utils/request-logger");
 const filesService = require('../services/files.service');
-const { success, badRequest, internalServerError } = require("../utils/response");
-const constants = require("../utils/constants");
+const { success, badRequest, internalServerError } = require("../helpers/utils/response");
+const constants = require("../helpers/constants");
 const fs = require('fs');
 
 exports.uploadImages = async (req, res) => {

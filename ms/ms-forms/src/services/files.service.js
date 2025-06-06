@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const constants = require('../utils/constants');
+const constants = require('../helpers/constants');
 
 class FilesService {
 

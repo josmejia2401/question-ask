@@ -1,9 +1,9 @@
-const { CustomError } = require('../errors/errors');
+const { CustomError } = require('../helpers/errors/errors');
 const { User } = require('../models/user.model');
 const bcrypt = require("bcrypt");
-const redis = require('../utils/redis-client');
-const { handleSequelizeError } = require('../utils/sequelize-error-handler');
-const { isEmpty } = require('../utils/utils');
+const redis = require('../helpers/utils/redis-client');
+const { handleSequelizeError } = require('../helpers/utils/sequelize-error-handler');
+const { isEmpty } = require('../helpers/utils/utils');
 const fs = require('fs');
 const path = require('path');
 
