@@ -1,8 +1,26 @@
+import React, { useState } from "react";
 import QuestionView from './question-view';
 
-const FormCard = ({ form }) => {
+const FormCard = ({ form, onDelete }) => {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = () => {
+    setShowDeleteDialog(false);
+    onDelete(form.id);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteDialog(false);
+  };
+
   return (
-    <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-6">
+    <div className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow mb-6 group">
       <div className="bg-white p-4 border-b">
         <div className="flex justify-between items-start">
           <div>
@@ -11,13 +29,38 @@ const FormCard = ({ form }) => {
               <p className="mt-1 text-gray-600">{form.description}</p>
             )}
           </div>
-          <span className={`px-2 py-1 text-xs rounded ${
-            form.isPublic 
-              ? 'bg-green-100 text-green-800' 
+
+          <div className="flex items-center gap-2">
+            <span className={`px-2 py-1 text-xs rounded ${form.isPublic
+              ? 'bg-green-100 text-green-800'
               : 'bg-yellow-100 text-yellow-800'
-          }`}>
-            {form.isPublic ? 'Público' : 'Privado'}
-          </span>
+              }`}>
+              {form.isPublic ? 'Público' : 'Privado'}
+            </span>
+
+            <button
+              onClick={handleDelete}
+              className="p-1 text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+              aria-label="Eliminar formulario"
+              title="Eliminar formulario"
+            >
+              {/* Icono de basura - Puedes usar Heroicons, SVG directo o otro paquete */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -28,7 +71,7 @@ const FormCard = ({ form }) => {
           </svg>
           Preguntas ({form.questions.length})
         </h3>
-        
+
         <div className="space-y-3">
           {form.questions
             .sort((a, b) => a.order - b.order)
@@ -37,7 +80,48 @@ const FormCard = ({ form }) => {
             ))}
         </div>
       </div>
+
+      {/* Diálogo de confirmación */}
+      {showDeleteDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Confirmar eliminación
+              </h3>
+              <button
+                onClick={cancelDelete}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <p className="text-gray-600 mb-6">
+              ¿Estás seguro de eliminar el formulario <strong>"{form.title}"</strong>? Esta acción no se puede deshacer.
+            </p>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={cancelDelete}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
 export default FormCard;

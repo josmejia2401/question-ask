@@ -1,12 +1,25 @@
 const Joi = require('joi');
 
 const imageSchema = Joi.object({
-  imagePath: Joi.string().optional().messages({
+  id: Joi.string().optional().messages({
+    'any.required': `"ID" es requerido`
+  }),
+  optionId: Joi.string().optional().messages({
+    'any.required': `"optionId" es requerido`
+  }),
+  imagePath: Joi.string().required().messages({
     'any.required': `"imagePath" es requerido`
   }),
+  createdAt: Joi.date()
 });
 
 const optionSchema = Joi.object({
+  id: Joi.string().optional().messages({
+    'any.required': `"ID" es requerido`
+  }),
+  questionId: Joi.string().optional().messages({
+    'any.required': `"questionId" es requerido`
+  }),
   text: Joi.string().required().messages({
     'string.base': `"text" debe ser un texto`,
     'any.required': `"text" es requerido`
@@ -14,9 +27,16 @@ const optionSchema = Joi.object({
   images: Joi.array().items(imageSchema).optional().messages({
     'array.base': `"images" debe ser un arreglo`
   }),
+  createdAt: Joi.date()
 });
 
 const questionSchema = Joi.object({
+  id: Joi.string().optional().messages({
+    'any.required': `"ID" es requerido`
+  }),
+  formId: Joi.string().optional().messages({
+    'any.required': `"optionId" es requerido`
+  }),
   questionText: Joi.string().required().messages({
     'string.base': `"questionText" debe ser un texto`,
     'any.required': `"questionText" es requerido`
@@ -36,9 +56,16 @@ const questionSchema = Joi.object({
   options: Joi.array().items(optionSchema).optional().messages({
     'array.base': `"options" debe ser un arreglo`
   }),
+  createdAt: Joi.date()
 });
 
 const formSchema = Joi.object({
+  id: Joi.string().optional().messages({
+    'any.required': `"ID" es requerido`
+  }),
+  userId: Joi.string().optional().messages({
+    'any.required': `"optionId" es requerido`
+  }),
   title: Joi.string().required().messages({
     'string.base': `"title" debe ser un texto`,
     'any.required': `"title" es requerido`
@@ -49,6 +76,7 @@ const formSchema = Joi.object({
     'array.base': `"questions" debe ser un arreglo`,
     'any.required': `"questions" es requerido`
   }),
+  createdAt: Joi.date()
 });
 
 

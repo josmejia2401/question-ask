@@ -11,7 +11,6 @@ const FormList = () => {
     const fetchQuestions = async () => {
         setLoading(true);
         setError(null);
-        
         try {
             const json = await findAll();
             if (json.code === 200 && Array.isArray(json.data)) {
@@ -26,6 +25,11 @@ const FormList = () => {
             setLoading(false);
         }
     };
+
+    const onDelete = (id) => {
+        const newData = data.filter(p => p.id !== id);
+        setData(newData);
+    }
 
     useEffect(() => {
         fetchQuestions();
@@ -87,7 +91,7 @@ const FormList = () => {
             ) : (
                 <div className="space-y-6">
                     {data.map((form) => (
-                        <FormCard key={form.id} form={form} />
+                        <FormCard key={form.id} form={form} onDelete={onDelete} />
                     ))}
                 </div>
             )}

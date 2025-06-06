@@ -6,6 +6,7 @@ const filesService = require('./files.service'); // ajusta ruta si es necesario
 
 const { sequelize, Form, Question, QuestionOption, QuestionOptionImage } = require('../models');
 const removeSnakeCaseDuplicates = require('../helpers/utils/camel-case');
+const { Op } = require('sequelize');
 
 class FormService {
 
@@ -120,22 +121,46 @@ class FormService {
         }, { transaction: t });
 
         // Borrar preguntas relacionadas y todo lo anidado para insertar nuevos
-        await QuestionOptionImage.destroy({
-          where: { optionId: sequelize.literal(`IN (SELECT id FROM question_options WHERE question_id IN (SELECT id FROM questions WHERE form_id = '${id}'))`) },
-          transaction: t
+
+        await sequelize.query(
+          `DELETE FROM questionask.question_option_images
+           WHERE option_id IN (
+             SELECT qo.id FROM questionask.question_options qo
+             JOIN questionask.questions q ON qo.question_id = q.id
+             WHERE q.form_id = :formId
+           )`,
+          { replacements: { formId: id }, transaction: t }
+        );
+
+        // 1. Obtener IDs de preguntas para ese formId
+        const questions = await Question.findAll({
+          where: { formId: id },
+          attributes: ['id'],
+          raw: true,
+          transaction: t,
         });
-        await QuestionOption.destroy({
-          where: { questionId: sequelize.literal(`IN (SELECT id FROM questions WHERE form_id = '${id}')`) },
-          transaction: t
+        const questionIds = questions.map(q => q.id);
+
+        // 2. Eliminar opciones asociadas (si hay preguntas)
+        if (questionIds.length > 0) {
+          await QuestionOption.destroy({
+            where: { questionId: { [Op.in]: questionIds } },
+            transaction: t,
+          });
+        }
+
+        // 3. Eliminar las preguntas
+        await Question.destroy({
+          where: { formId: id },
+          transaction: t,
         });
-        await Question.destroy({ where: { formId: id }, transaction: t });
 
         // Insertar nuevas preguntas, opciones e imágenes (igual que en create)
         if (formData.questions && formData.questions.length > 0) {
           for (const q of formData.questions) {
             const question = await Question.create({
               formId: form.id,
-              questionText: q.question_text,
+              questionText: q.questionText,
               type: q.type,
               required: q.required || false,
               order: q.order,
@@ -152,7 +177,7 @@ class FormService {
                   for (const img of o.images) {
                     await QuestionOptionImage.create({
                       optionId: option.id,
-                      imagePath: img.image_path,
+                      imagePath: img.imagePath,
                     }, { transaction: t });
                   }
                 }
@@ -168,6 +193,7 @@ class FormService {
 
       return form;
     } catch (error) {
+      console.log(error);
       if (error.name === "CustomError") throw error;
       throw handleSequelizeError(error);
     }
