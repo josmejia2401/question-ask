@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
-import { findAll } from "./api";
+import { findAll, deleteById } from "./api";
 import FormCard from './form-item';
 
 const FormList = () => {
@@ -26,9 +26,24 @@ const FormList = () => {
         }
     };
 
-    const onDelete = (id) => {
-        const newData = data.filter(p => p.id !== id);
-        setData(newData);
+    const onDelete = async (id) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const json = await deleteById(id);
+            if (json.code === 200) {
+                const newData = data.filter(p => p.id !== id);
+                setData(newData);
+            } else {
+                throw new Error(json.message || "Formato inesperado de respuesta");
+            }
+        } catch (err) {
+            console.log(err);
+            setError(err.message || "Error al cargar los datos");
+            console.error("Error fetching forms:", err);
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {

@@ -74,7 +74,7 @@ exports.deleteForm = async (req, res) => {
   try {
     const userId = req.user.keyid;
     await formService.delete(req.params.id, userId);
-    res.status(204).json(success());
+    res.status(200).json(success());
   } catch (err) {
     logger.error(err);
     handleError(res, err);

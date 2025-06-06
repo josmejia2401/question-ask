@@ -73,7 +73,7 @@ exports.deleteUser = async (req, res) => {
       return res.status(403).json(forbidden());
     }
     await userService.deleteUser(req.params.id);
-    res.status(204).send();
+    res.status(200).json(success());
   } catch (err) {
     logger.error(err);
     handleError(res, err);

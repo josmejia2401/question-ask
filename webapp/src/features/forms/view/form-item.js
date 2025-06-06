@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import QuestionView from './question-view';
+import { TrashIcon } from '@heroicons/react/24/solid'; // o /24/outline
+
+import ButtonComponent from "../../../components/button-secondary";
 
 const FormCard = ({ form, onDelete }) => {
+  const [loading, setLoading] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [questionsExpanded, setQuestionsExpanded] = useState(false);
 
@@ -12,7 +16,8 @@ const FormCard = ({ form, onDelete }) => {
 
   const confirmDelete = () => {
     setShowDeleteDialog(false);
-    onDelete(form.id);
+    setLoading(true);
+    onDelete(form.id).finally(() => setLoading(false));
   };
 
   const cancelDelete = () => {
@@ -124,12 +129,14 @@ const FormCard = ({ form, onDelete }) => {
               >
                 Cancelar
               </button>
-              <button
-                onClick={confirmDelete}
+              <ButtonComponent
                 className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              >
-                Eliminar
-              </button>
+                aria-label="Eliminar formulario"
+                text="Eliminar"
+                icon={<TrashIcon className="w-5 h-5" aria-hidden="true"></TrashIcon>}
+                onClick={confirmDelete}
+                loading={loading}>
+              </ButtonComponent>
             </div>
           </div>
         </div>
