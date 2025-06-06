@@ -65,31 +65,36 @@ class FormService {
     try {
       const cacheKey = `forms:${id}`;
       const cached = await redis.get(cacheKey);
-      let form = cached ? JSON.parse(cached) : null;
+      if (cached) {
+        return JSON.parse(cached);
+      }
 
-      if (isEmpty(form)) {
-        form = Form.findByPk(id, {
+      const form = await Form.findByPk(id, {
+        include: [{
+          model: Question,
+          as: 'questions',
           include: [{
-            model: Question,
+            model: QuestionOption,
+            as: 'options',
             include: [{
-              model: QuestionOption,
-              include: [QuestionOptionImage]
+              model: QuestionOptionImage,
+              as: 'images',
             }]
           }]
-        });
-      }
+        }]
+      });
 
       if (isEmpty(form)) {
         throw new CustomError(`Elemento con ID ${id} no encontrado`, 404);
       } else {
-        redis.set(cacheKey, JSON.stringify(form), 'EX', 3600);
+        // redis.set(cacheKey, JSON.stringify(form), 'EX', 3600);
       }
 
       if (form.userId !== userId) {
         throw new CustomError('¡Ups! Elemento no permitido', 403);
       }
 
-      return form;
+      return removeSnakeCaseDuplicates(form.get({ plain: true }), { parseDates: true });
     } catch (error) {
       if (error.name === "CustomError") throw error;
       throw handleSequelizeError(error);
@@ -188,10 +193,25 @@ class FormService {
         return form;
       });
 
-      redis.set(`forms:${form.id}`, JSON.stringify(form), 'EX', 3600);
-      redis.del(`forms:user:${form.userId}`);
+      const formSearched = await Form.findByPk(form.id, {
+        include: [{
+          model: Question,
+          as: 'questions',
+          include: [{
+            model: QuestionOption,
+            as: 'options',
+            include: [{
+              model: QuestionOptionImage,
+              as: 'images',
+            }]
+          }]
+        }]
+      });
 
-      return form;
+      redis.set(`forms:${formSearched.id}`, JSON.stringify(formSearched), 'EX', 3600);
+      redis.del(`forms:user:${formSearched.userId}`);
+
+      return formSearched;
     } catch (error) {
       console.log(error);
       if (error.name === "CustomError") throw error;
@@ -230,11 +250,11 @@ class FormService {
 
   async findAll(userId, withQuestions = false) {
     try {
-      /*const cacheKey = `forms:user:${userId}`;
+      const cacheKey = `forms:user:${userId}`;
       const cached = await redis.get(cacheKey);
       if (cached) {
         return JSON.parse(cached);
-      }*/
+      }
       const forms = await Form.findAll({
         where: { userId },
         include: withQuestions ? [{

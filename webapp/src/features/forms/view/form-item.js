@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import QuestionView from './question-view';
-import { TrashIcon } from '@heroicons/react/24/solid'; // o /24/outline
+import { TrashIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
 
 import ButtonComponent from "../../../components/button-secondary";
+import { Link } from "react-router-dom";
 
 const FormCard = ({ form, onDelete }) => {
   const [loading, setLoading] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [questionsExpanded, setQuestionsExpanded] = useState(false);
+
+  const handleEdit = (e, id) => {
+    e.stopPropagation();
+    setShowDeleteDialog(true);
+  };
 
   const handleDelete = (e) => {
     e.stopPropagation();
@@ -40,33 +46,25 @@ const FormCard = ({ form, onDelete }) => {
             )}
           </div>
           <div className="flex items-center gap-2">
+            <ButtonComponent
+              onClick={handleDelete}
+              className="p-1 text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+              aria-label="Eliminar formulario"
+              icon={<TrashIcon className="w-5 h-5" aria-hidden="true"></TrashIcon>}
+              text="">
+            </ButtonComponent>
+            <Link
+              to={`/forms/edit?id=${form.id}`}
+              className="p-1 text-gray-400 hover:text-blue-500 transition-colors opacity-0 group-hover:opacity-100"
+              aria-label="Eliminar formulario">
+              <PencilSquareIcon className="w-5 h-5" aria-hidden="true"></PencilSquareIcon>
+            </Link>
             <span className={`px-2 py-1 text-xs rounded ${form.isPublic
               ? 'bg-green-100 text-green-800'
               : 'bg-yellow-100 text-yellow-800'
               }`}>
               {form.isPublic ? 'Público' : 'Privado'}
             </span>
-            <button
-              onClick={handleDelete}
-              className="p-1 text-gray-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
-              aria-label="Eliminar formulario"
-              title="Eliminar formulario"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                />
-              </svg>
-            </button>
           </div>
         </div>
       </div>

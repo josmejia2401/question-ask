@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import { findAll, deleteById } from "./api";
 import FormCard from './form-item';
+import ButtonComponent from "../../../components/button-secondary";
 
 const FormList = () => {
     const [data, setData] = useState([]);
@@ -87,12 +89,14 @@ const FormList = () => {
         <div className="container mx-auto px-4 py-8">
             <div className="mb-6 flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800">Mis Formularios</h1>
-                <button
-                    onClick={fetchQuestions}
+                <ButtonComponent
                     className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                >
-                    Refrescar
-                </button>
+                    aria-label="Refrescar formulario"
+                    text="Refrescar"
+                    icon={<ArrowPathIcon className="w-5 h-5" aria-hidden="true"></ArrowPathIcon>}
+                    onClick={fetchQuestions}
+                    loading={loading}>
+                </ButtonComponent>
             </div>
 
             {data.length === 0 ? (

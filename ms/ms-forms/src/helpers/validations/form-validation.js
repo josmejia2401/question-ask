@@ -10,7 +10,7 @@ const imageSchema = Joi.object({
   imagePath: Joi.string().required().messages({
     'any.required': `"imagePath" es requerido`
   }),
-  createdAt: Joi.date()
+  createdAt: Joi.date().allow(null, '')
 });
 
 const optionSchema = Joi.object({
@@ -27,7 +27,7 @@ const optionSchema = Joi.object({
   images: Joi.array().items(imageSchema).optional().messages({
     'array.base': `"images" debe ser un arreglo`
   }),
-  createdAt: Joi.date()
+  createdAt: Joi.date().allow(null, '')
 });
 
 const questionSchema = Joi.object({
@@ -56,7 +56,7 @@ const questionSchema = Joi.object({
   options: Joi.array().items(optionSchema).optional().messages({
     'array.base': `"options" debe ser un arreglo`
   }),
-  createdAt: Joi.date()
+  createdAt: Joi.date().allow(null, '')
 });
 
 const formSchema = Joi.object({
@@ -76,7 +76,7 @@ const formSchema = Joi.object({
     'array.base': `"questions" debe ser un arreglo`,
     'any.required': `"questions" es requerido`
   }),
-  createdAt: Joi.date()
+  createdAt: Joi.date().allow(null, '')
 });
 
 
