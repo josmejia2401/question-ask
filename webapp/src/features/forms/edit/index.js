@@ -58,9 +58,22 @@ const EditFormPage = () => {
         }
     };
 
-    const onPublish = () => {
-        console.log('Publicar formulario...');
-        // Lógica para publicar aquí
+    const onPublish = async () => {
+        try {
+            setError(null);
+            setLoading(true);
+            formData.isPublic = true;
+            const response = await updateById(id, formData);
+            if (response.code === 200) {
+                
+            } else {
+                throw new Error(response.message || 'Error al guardar');
+            }
+        } catch (err) {
+            setError(err.message || 'Error al guardar los cambios');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const addQuestion = () => {
@@ -78,11 +91,9 @@ const EditFormPage = () => {
     };
 
     const updateQuestion = (index, updatedQuestion) => {
-        console.log("updatedQuestion", updatedQuestion);
         const newQuestions = [...formData.questions];
         newQuestions[index] = updatedQuestion;
         const form = { ...formData, questions: newQuestions }
-        console.log("ZZZZZZZ", form);
         setFormData(form);
     };
 
@@ -133,12 +144,12 @@ const EditFormPage = () => {
                     Guardar
                 </button>
 
-                <button
+                {!formData.isPublic && <button
                     onClick={onPublish}
                     className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
                     <PaperAirplaneIcon className="w-5 h-5" />
                     Publicar
-                </button>
+                </button>}
             </div>
 
             <div className="bg-white p-4 border rounded shadow">

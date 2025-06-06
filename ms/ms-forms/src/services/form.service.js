@@ -66,7 +66,7 @@ class FormService {
       const cacheKey = `forms:${id}`;
       const cached = await redis.get(cacheKey);
       if (cached) {
-        return JSON.parse(cached);
+        return removeSnakeCaseDuplicates(JSON.parse(cached));
       }
 
       const form = await Form.findByPk(id, {
@@ -94,7 +94,7 @@ class FormService {
         throw new CustomError('¡Ups! Elemento no permitido', 403);
       }
 
-      return removeSnakeCaseDuplicates(form.get({ plain: true }), { parseDates: true });
+      return removeSnakeCaseDuplicates(form.get({ plain: true }));
     } catch (error) {
       if (error.name === "CustomError") throw error;
       throw handleSequelizeError(error);
@@ -253,7 +253,7 @@ class FormService {
       const cacheKey = `forms:user:${userId}`;
       const cached = await redis.get(cacheKey);
       if (cached) {
-        return JSON.parse(cached);
+        return JSON.parse(cached).map(removeSnakeCaseDuplicates);
       }
       const forms = await Form.findAll({
         where: { userId },
